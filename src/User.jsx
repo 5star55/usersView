@@ -47,17 +47,29 @@ export default function Users() {
     keepPreviousData: true,
   });
 
-  const addUserMutation = useMutation({ mutationFn: addUsers, onSuccess: () => queryClient.invalidateQueries(["users"]) });
-  const updateUserMutation = useMutation({ mutationFn: updateUsers, onSuccess: () => queryClient.invalidateQueries(["users"]) });
+  const addUserMutation = useMutation({
+    mutationFn: addUsers,
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === "users",
+      }),
+  });
+
+  const updateUserMutation = useMutation({
+    mutationFn: updateUsers,
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === "users",
+      }),
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const user = { id: editUser?.id, username: userName, email };
     if (editUser) {
-      updateUserMutation.mutate(user);
+      updateUserMutation.mutate({ id: editUser.id, username: userName, email });
       setEditUser(null);
     } else {
-      addUserMutation.mutate(user);
+      addUserMutation.mutate({ username: userName, email });
     }
     setUserName("");
     setEmail("");
@@ -78,7 +90,10 @@ export default function Users() {
         onChange={(e) => setSearch(e.target.value)}
         className="w-full max-w-md p-3 rounded-lg mb-8 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
       />
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center mb-10">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center mb-10"
+      >
         <input
           type="text"
           value={userName}
