@@ -70,7 +70,7 @@ export default function Users() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-black flex flex-col items-center p-5">
-      <h1 className="text-4xl font-bold mb-5">Users Dashboard</h1>
+      <h1 className="text-4xl font-bold mb-5">Attenders Dashboard</h1>
       <input
         type="search"
         placeholder="Search users..."
